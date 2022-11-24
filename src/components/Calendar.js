@@ -2,7 +2,7 @@ import FullCalendar from '@fullcalendar/react';
 
 import dayGridPlugin from '@fullcalendar/daygrid';
 import React, { useState } from 'react';
-
+import { useLocation } from 'react-router-dom';
 import { Component } from 'react';
 import interactionPlugin from "@fullcalendar/interaction";
 import productData from "../data/product-data.json";
@@ -27,6 +27,29 @@ export const StyleWrapper = styled.div`
   background: #FFFAF0;
 }
 `
+
+export const Main=()=>{ //시작페이지
+  return(
+    <div>
+      <h3>TEAM : 2 0 1 8</h3>
+    <h2>C A L E N D A R</h2>
+    </div>
+  );
+}
+
+
+export const Error=()=>{ //에러페이지
+    const locations = useLocation();
+    return(
+      <div>
+        <h3>Page not found at {locations.pathname}</h3>
+      </div>
+    );
+  }
+
+
+
+
 
 const calendar_data = firestore.collection("calendar_data");
 /*
@@ -77,5 +100,4 @@ const Calendar = (props) => {
       />
   );
 };
-
 export default Calendar;
