@@ -1,12 +1,11 @@
 import { Route, Routes } from "react-router-dom";
-import Calendar from "./components/Calendar" //캘린더 
-import Error from "./components/Error" //에러
+import Calendar, {Error, Main} from "./components/Calendar"; //캘린더 
 
 const App = () => (
   <Routes>
-    <Route path='/' element={<Calendar />}/>
+    <Route path='/' element={<Main />}/>
+    <Route path='/Calendar' element={<Calendar />}/>
     <Route path='*' element={<Error />}/>
   </Routes>
 );
-
 export default App;
