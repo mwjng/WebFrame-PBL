@@ -2,6 +2,7 @@ import FullCalendar from '@fullcalendar/react';
 
 import dayGridPlugin from '@fullcalendar/daygrid';
 import React, { useState } from 'react';
+
 import { Component } from 'react';
 import interactionPlugin from "@fullcalendar/interaction";
 import productData from "../data/product-data.json";
