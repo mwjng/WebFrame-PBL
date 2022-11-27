@@ -7,15 +7,17 @@ import '../style/style.css'
 import { Component } from 'react';
 import interactionPlugin from "@fullcalendar/interaction";
 import { firestore } from "../firebase_config"
+import { VscAdd } from "react-icons/vsc";
+import Modal from './Modal';
 
 export const Main = () => { //시작페이지
-    return(
-      <div className='mainPage'>
-        <h1>TEAM : 2 0 1 8</h1>
-      <h1><Link to ="calendar">C A L E N D A R</Link></h1>
-      </div>
-    );
-  }
+  return (
+    <div className='mainPage'>
+      <h1>TEAM : 2 0 1 8</h1>
+      <h1><Link to="calendar">C A L E N D A R</Link></h1>
+    </div>
+  );
+}
 
 
 export const Error = () => { //에러페이지
@@ -69,28 +71,31 @@ const Calendar = () => {
 
   // 클릭 시 이벤트 정보 받아옴
   const handleEventClick = (clickInfo) => {
-    
+
     console.log(clickInfo.event.id) // id 값 나옴    
   }
 
   return (
-      <FullCalendar
-        plugins={[dayGridPlugin, interactionPlugin]}
-        headerToolbar={{
-          left: "prev,next today",
-          center: "title",
-          right: "dayGridMonth,dayGridWeek,dayGridDay",
-        }}
-        selectable={true}
-        dateClick={handleDateClick}
-        eventClick={handleEventClick}
-        select={handleDateSelect}
-        editable={true}
-        droppable={true}
-        weekends={true}
-        events={eventsData}
-        locale='ko'
-      />
+    <><FullCalendar
+      plugins={[dayGridPlugin, interactionPlugin]}
+      headerToolbar={{
+        left: "prev,next today",
+        center: "title",
+        right: "dayGridMonth,dayGridWeek,dayGridDay",
+      }}
+      selectable={true}
+      dateClick={handleDateClick}
+      eventClick={handleEventClick}
+      select={handleDateSelect}
+      editable={true}
+      droppable={true}
+      weekends={true}
+      events={eventsData}
+      locale='ko' />
+
+      <button> <Link to= "././Modal" className='link'><VscAdd />
+      </Link>
+      </button></>
   );
 };
 
