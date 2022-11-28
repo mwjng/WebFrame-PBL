@@ -4,17 +4,19 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import '../style/style.css'
-import { Component } from 'react';
 import interactionPlugin from "@fullcalendar/interaction";
 import { firestore } from "../firebase_config"
-import { VscAdd } from "react-icons/vsc";
+
 import Modal from './Modal';
 
+const goSelect = () => {
+  document.location.href('/');
+}
 export const Main = () => { //시작페이지
   return (
     <div className='mainPage'>
       <h1>TEAM : 2 0 1 8</h1>
-      <h1><Link to="calendar">C A L E N D A R</Link></h1>
+
     </div>
   );
 }
@@ -29,11 +31,12 @@ export const Error = () => { //에러페이지
   );
 }
 
-
 const today = new Date();
 const calendar_data = firestore.collection("calendar_data");
-
 const Calendar = () => {
+
+  const [signup, setSignup] = useState(false);
+
   const [visible, setVisible] = useState(false);
   const [date, setDate] = useState(today);
 
@@ -42,60 +45,67 @@ const Calendar = () => {
     calendar_data.get().then((snapshot) => {
       const events = snapshot.docs.map(event => event.data());
       setEventsData(events)
+      console.log(events)
     }).catch((e) => {
       console.log(e + "fetching error")
     })
   }
   useEffect(() => {
     getEventsData();
-  }, [eventsData])
-
+  }, [])
 
   const handleDateSelect = (newDate) => {
     setDate(newDate);
     setVisible(true);
   };
 
-  const handleDateClick = (arg) => { // bind with an arrow function
-    console.log(arg);
+  // 클릭 시 이벤트 정보 받아옴
+  const handleEventClick = (clickInfo) => {
+    console.log(clickInfo.event.id) // id 값 나옴    
+    var del = confirm('삭제하시겠습니까?');
+    if (del) {
+      calendar_data.doc(clickInfo.event.startStr).delete();
+      getEventsData();
+      console.log("데이터가 삭제되었습니다.")
+    }
+  }
 
-    //<Modal open={modalopen} close={closeModal} header="Modal heading"></Modal>
-    var event = prompt("일정을 입력하세요.",);;
+  const handleDateClick = (arg) => { // 날짜누르면 일정 추가
+    var event = prompt("일정을 입력하세요.",);
     if (event) {
-      calendar_data.doc(arg.dateStr).set({ date: arg.dateStr, title: `${event}` })
-      console.log("데이터가 추가되었습니다.");
+      calendar_data.doc(arg.dateStr).set({ date: arg.dateStr, title: `${event}`, color: "" })
+      getEventsData()
+      console.log("데이터가 추가되었습니다.")
     }
     else
       console.log("데이터가 null입니다. 추가되지 않았습니다.")
   }
 
-  // 클릭 시 이벤트 정보 받아옴
-  const handleEventClick = (clickInfo) => {
-
-    console.log(clickInfo.event.id) // id 값 나옴    
-  }
 
   return (
-    <><FullCalendar
-      plugins={[dayGridPlugin, interactionPlugin]}
-      headerToolbar={{
-        left: "prev,next today",
-        center: "title",
-        right: "dayGridMonth,dayGridWeek,dayGridDay",
-      }}
-      selectable={true}
-      dateClick={handleDateClick}
-      eventClick={handleEventClick}
-      select={handleDateSelect}
-      editable={true}
-      droppable={true}
-      weekends={true}
-      events={eventsData}
-      locale='ko' />
+    <React.Fragment>
+      <FullCalendar
+        plugins={[dayGridPlugin, interactionPlugin]}
+        headerToolbar={{
+          left: "prev,next today",
+          center: "title",
+          right: "dayGridMonth,dayGridWeek,dayGridDay",
+        }}
+        selectable={true}
+        dateClick={handleDateClick}
+        eventClick={handleEventClick}
+        select={handleDateSelect}
+        editable={true}
+        droppable={true}
+        weekends={true}
+        events={eventsData}
+        locale='ko'
+      />
+      <div className='goHome'>
+        <h1><Link to="insert">일정 추가</Link> @ <Link to="/">홈 화면</Link></h1>
+      </div>
+    </React.Fragment>
 
-      <button> <Link to= "././Modal" className='link'><VscAdd />
-      </Link>
-      </button></>
   );
 };
 
